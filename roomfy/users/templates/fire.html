@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Animation</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #111217;
+        }
+
+        .fire {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -25%);
+            height: 20vw;
+            width: 20vw;
+        }
+
+        .flames {
+            position: absolute;
+            bottom: 40%;
+            left: 50%;
+            width: 60%;
+            height: 60%;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .flame {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            background-color: #FFDC01;
+            border-radius: 1vw;
+            animation-duration: 1.5s;
+            animation-timing-function: ease-in;
+            animation-iteration-count: infinite;
+        }
+
+        .flame:nth-child(2n+1) {
+            animation-name: flameodd;
+        }
+
+        .flame:nth-child(2n) {
+            animation-name: flameeven;
+        }
+
+        .flame:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .flame:nth-child(2) {
+            animation-delay: 0.375s;
+        }
+
+        .flame:nth-child(3) {
+            animation-delay: 0.75s;
+        }
+
+        .flame:nth-child(4) {
+            animation-delay: 1.125s;
+        }
+
+        .logs {
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 15%;
+        }
+
+        .logs::before, .logs::after {
+            position: absolute;
+            content: '';
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(20deg);
+            height: 100%;
+            width: 100%;
+            border-radius: 1vw;
+        }
+
+        .logs::before {
+            transform: translate(-50%, -50%) rotate(-20deg);
+            background-color: #70392F;
+        }
+
+        .logs::after {
+            background-color: #612E25;
+        }
+
+        @keyframes flameodd {
+            0%, 100% {
+                width: 0;
+                height: 0;
+            }
+            25% {
+                width: 100%;
+                height: 100%;
+            }
+            0% {
+                background-color: #FFDC01;
+                z-index: 1000000;
+                right: 0;
+                bottom: 0;
+            }
+            40% {
+                background-color: #FDAC01;
+            }
+            100% {
+                background-color: #F73B01;
+                z-index: -10;
+                right: 150%;
+                bottom: 170%;
+            }
+        }
+
+        @keyframes flameeven {
+            0%, 100% {
+                width: 0;
+                height: 0;
+            }
+            25% {
+                width: 100%;
+                height: 100%;
+            }
+            0% {
+                background-color: #FFDC01;
+                z-index: 1000000;
+                right: 0;
+                bottom: 0;
+            }
+            40% {
+                background-color: #FDAC01;
+            }
+            100% {
+                background-color: #F73B01;
+                z-index: -10;
+                right: 170%;
+                bottom: 150%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fire">
+        <div class="flames">
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+            <div class="flame"></div>
+        </div>
+        <div class="logs"></div>
+    </div>
+</body>
+</html>
