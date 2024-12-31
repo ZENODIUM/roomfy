@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nameboard Design</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .nameboard {
+            position: relative;
+            width: 300px;
+            height: 150px;
+            background-color: #ffffff;
+            border: 3px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .bolt {
+            position: absolute;
+            top: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bolt::before {
+            content: '';
+            width: 22px;
+            height: 2px;
+            background-color: #fff;
+            transform: rotate(45deg);
+            position: absolute;
+        }
+
+        .inner-box {
+            position: absolute;
+            top: 30px;
+            left: 10%;
+            width: 80%;
+            height: 90px;
+            background-color: #e0e0e0;
+            border: 2px solid #333;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .inner-box span {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="nameboard">
+        <div class="bolt"></div>
+        <div class="inner-box">
+            <span>Your Name Here</span>
+        </div>
+    </div>
+</body>
+</html>

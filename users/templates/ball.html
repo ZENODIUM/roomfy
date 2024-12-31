@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Design with Gelatine Effect</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .basketball {
+            width: 150px;
+            height: 150px;
+            background-color: #f57c00; /* Basketball orange color */
+            border-radius: 50%; /* Make it circular */
+            position: relative;
+            border: 3px solid #000; /* Border to define the ball */
+            cursor: pointer; /* Change cursor to pointer to indicate clickability */
+        }
+
+        /* Horizontal line */
+        .line-horizontal {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: black;
+            transform: translateY(-50%);
+        }
+
+        /* Vertical line (center) */
+        .line-vertical {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            height: 100%;
+            width: 4px;
+            background-color: black;
+            transform: translateX(-50%);
+        }
+
+        /* Vertical line (left) */
+        .line-left {
+            position: absolute;
+            top: 4px;
+            left: 30%;
+            height: 95%;
+            width: 4px;
+            background-color: black;
+        }
+
+        /* Vertical line (right) */
+        .line-right {
+            position: absolute;
+            top: 4px;
+            left: 70%;
+            height: 95%;
+            width: 4px;
+            background-color: black;
+        }
+
+        /* Gelatine effect */
+        .gelatine {
+            animation: gelatine 0.5s ease;
+        }
+
+        @keyframes gelatine {
+            from, to {
+                transform: scale(1, 1);
+            }
+            25% {
+                transform: scale(0.9, 1.1);
+            }
+            50% {
+                transform: scale(1.1, 0.9);
+            }
+            75% {
+                transform: scale(0.95, 1.05);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="basketball" onclick="applyGelatineEffect()">
+        <div class="line-horizontal"></div>
+        <div class="line-vertical"></div>
+        <div class="line-left"></div>
+        <div class="line-right"></div>
+    </div>
+
+    <script>
+        function applyGelatineEffect() {
+            const basketball = document.querySelector('.basketball');
+            
+            // Add the gelatine class to trigger the animation
+            basketball.classList.add('gelatine');
+            
+            // Remove the gelatine class after the animation ends
+            basketball.addEventListener('animationend', () => {
+                basketball.classList.remove('gelatine');
+            });
+        }
+    </script>
+</body>
+</html>

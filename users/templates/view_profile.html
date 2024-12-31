@@ -1,0 +1,1969 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Room</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000;
+        }
+
+        .room {
+            position: relative;
+            width: 1300px;
+            height: 550px;
+            /* ffd8a6; */
+            background: #a8c7ff;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255);
+        }
+
+        .floor {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: #995600;
+        }
+
+        .nameboard {
+            position: absolute;
+            top: 150px;
+            left: 750px;
+            width: 130px;
+            height: 40px;
+            background-color: #ffffff;
+            border: 3px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .bolt {
+            position: absolute;
+            top: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bolt::before {
+            content: '';
+            width: 18px;
+            height: 2px;
+            background-color: #fff;
+            transform: rotate(45deg);
+            position: absolute;
+        }
+
+        .inner-box {
+            position: absolute;
+            top: 12px;
+            left: 5%;
+            width: 90%;
+            height: 20px;
+            background-color: #e0e0e0;
+            
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .inner-box span {
+            font-size: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+
+        .fridge {
+            position: absolute; /* Allows precise positioning */
+        top: 195px; /* Distance from the top of the page */
+        left: 1100px; /* Distance from the left of the page */
+            width: 120px;
+            height: 250px;
+            background: #ffa07a; /* Light coral color */
+            border-radius: 7px; /* Rounded corners */
+            border: 3px solid #000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Black outline */
+        }
+
+        .fridge::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #000; /* Black divider between doors */
+            transform: translateY(-50%);
+        }
+
+        .handle {
+            position: absolute;
+            width: 10px;
+            height: 40px;
+            background-color: #000; /* Black handles */
+            border-radius: 5px; /* Rounded edges for handles */
+        }
+
+        .handle.top {
+            top: 30px; /* Top door handle position */
+            left: 15px;
+        }
+
+        .handle.bottom {
+            bottom: 30px; /* Bottom door handle position */
+            left: 15px;
+        }
+
+
+
+
+
+
+
+
+.bookrack {
+    
+            position: absolute;
+            left: 250px;
+            top: 195px;
+            width: 120px;
+            height: 250px;
+            background-color: #d2a679; /* Light brown for the rack */
+            border-radius: 2px; /* Slightly rounded corners */
+            border: 3px solid #000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Black outline */
+        }
+
+        .shelf {
+            display: flex;
+            justify-content: flex-start;  /* Align books horizontally from left */
+            align-items: flex-end;
+            position: absolute;
+            width: 90%;
+            height: 70px; /* Height of each shelf rectangle */
+            background-color: #9d5718; /* Darker brown shelves */
+            border: 3px solid #000; /* Black outline */
+            left: 2.5%; /* Center shelves horizontally */
+
+        }
+
+        .shelf:nth-child(1) {
+            top: 10px; /* First shelf position */
+        }
+
+        .shelf:nth-child(2) {
+            top: 90px; /* Second shelf position */
+        }
+
+        .shelf:nth-child(3) {
+            top: 170px; /* Third shelf position */
+        }
+
+.book {
+    position: absolute; /* Allows precise positioning */
+    top: 7px; 
+    left: 48px; /* Distance from the left of the page */
+    width: 15px;
+    height: 60px;
+    background-color: #a92121; /* Brown color for books */
+    border-radius: 7px; /* Rounded corners */
+    margin: 0 10px; /* Spacing between books */
+    border: 3px solid #000; /* Black outline */
+    transition: transform 0.3s ease; /* Smooth transform effect */
+}
+
+.book:nth-child(1) {
+            left: -10px; /* First shelf position */
+        }
+
+        .book:nth-child(2) {
+            left: 11px; /* Second shelf position */
+        }
+
+        .book:nth-child(3) {
+            left: 33px; /* Third shelf position */
+        }
+
+.book:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.book.slanted:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Slanted book */
+.book.slanted {
+    transform: rotate(-10deg);
+    margin-left: 20px; /* Extra margin for better visual appearance */
+}
+
+
+
+.globe-container {
+            position: absolute;
+            top: 57px;
+            left: 300px;
+            width: 80px;
+            height: 95px;
+            margin: 50px auto;
+            /* border: 3px solid black;  */
+        }
+
+        /* Globe (circle) */
+        .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #add8e6; /* Light blue for water */
+            border-radius: 50%; /* Circular shape */
+            border: 3px solid black; /* Black outline */
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Continents (abstract shapes) */
+        .continent {
+            position: absolute;
+            background-color: rgb(88, 190, 100); /* White for continents */
+            border-radius: 50%; /* Rounded edges for continents */
+        }
+
+        .continent1 {
+            width: 10px;
+            height: 20px;
+            top: 20px;
+            left: 15px;
+        }
+
+        .continent2 {
+            width: 15px;
+            height: 10px;
+            top: 25px;
+            left: 15px;
+        }
+        .continent3 {
+            width: 15px;
+            height: 20px;
+            top: 12px;
+            left: 13px;
+        }
+
+        .continent4 {
+            width: 10px;
+            height: 5px;
+            top: 15px;
+            left: 35px;
+        }
+
+        .continent5 {
+            width: 5px;
+            height: 10px;
+            top: 12px;
+            left: 35px;
+        }
+        .continent6 {
+            width: 7px;
+            height: 18px;
+            top: 12px;
+            left: 36px;
+        }
+        
+
+  
+
+        /* Globe stand (arc) */
+        .stand-globe {
+            position: absolute;
+            width: 62px;
+            height: 62px;
+            border: 5px solid #8b5e3c; /* Brown color for the stand */
+            border-radius: 50%;
+            border-left-color: transparent; /* Remove left part of the circle */
+             /* Remove bottom part of the circle */
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            
+        }
+
+        /* Base of the stand */
+        .base {
+            position: absolute;
+            width: 50px;
+            height: 5px;
+            background-color: #8b5e3c; /* Brown color for base */
+            border-radius: 10px; /* Rounded edges for base */
+            top:73px;
+            left: 50%;
+            border: 3px solid black;
+            transform: translateX(-50%);
+        }
+
+        .base-bottom {
+            position: absolute;
+            width: 70px;
+            height: 5px;
+            background-color: #8b5e3c; /* Brown color for bottom base */
+            border-radius: 10px; /* Rounded edges for bottom base */
+            top:80px;
+            left: 50%;
+            border: 3px solid black;
+            transform: translateX(-50%);
+        }
+        
+
+        
+.basketball {
+            width: 50px;
+            height: 50px;
+            background-color: #f57c00; /* Basketball orange color */
+            border-radius: 50%; /* Make it circular */
+            position: relative;
+            border: 3px solid #000; /* Border to define the ball */
+            cursor: pointer; /* Change cursor to pointer to indicate clickability */
+        }
+
+        /* Horizontal line */
+        .line-horizontal {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: black;
+            transform: translateY(-50%);
+        }
+
+        /* Vertical line (center) */
+        .line-vertical {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            height: 100%;
+            width: 3px;
+            background-color: black;
+            transform: translateX(-50%);
+        }
+
+        /* Vertical line (left) */
+        .line-left {
+            position: absolute;
+            top:1px;
+            left: 20%;
+            height: 95%;
+            width: 3px;
+            background-color: black;
+        }
+
+        /* Vertical line (right) */
+        .line-right {
+            position: absolute;
+            top: 1px;
+            left: 75%;
+            height: 95%;
+            width: 3px;
+            background-color: black;
+        }
+
+        /* Gelatine effect */
+        .gelatine {
+            animation: gelatine 0.5s ease;
+        }
+
+        @keyframes gelatine {
+            from, to {
+                transform: scale(1, 1);
+            }
+            25% {
+                transform: scale(0.9, 1.1);
+            }
+            50% {
+                transform: scale(1.1, 0.9);
+            }
+            75% {
+                transform: scale(0.95, 1.05);
+            }
+        }
+
+
+
+
+        .lcd-container {
+            position: absolute;
+            left: 720px;
+            top: 210px;
+            display: flex;
+
+        }
+        .lcd-screen {
+    width: 250px;
+    height: 150px;
+    background-color: #333; /* Base screen color */
+    border-radius: 10px; /* Rounded corners */
+    border: 5px solid #000; /* Black outline */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden; /* Hide overflow for glitch effects */
+    cursor: pointer;
+}
+
+
+
+.screen-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    z-index: 1;
+    animation: none; /* Initially no animation */
+}
+
+#overlay-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    height: auto;
+    border: 3px solid black;
+    display: none;
+    z-index: 2;
+}
+
+.lcdtext {
+    color: black;
+    font-size: 12px;
+    text-decoration: none;
+    opacity: 0;  /* Initially hidden */
+    visibility: hidden;  /* Ensure they are not visible initially */
+    transition: opacity 0.5s ease, visibility 0s 0.5s;  /* Smooth fade-in */
+    z-index: 2;  /* Ensure the links are above the background */
+    margin: 5px 0;  /* Spacing between links */
+}
+
+.lcdtext:focus {
+    outline: none;  /* Prevent outline on link focus */
+}
+.screen-overlay a {
+    display: block;  /* Ensure the links are treated as block elements */
+}
+
+.lcd-screen.active .screen-overlay {
+    animation: whiteScreen 1s forwards; /* Grow the white screen */
+    
+}
+
+.lcd-screen.inactive .screen-overlay {
+    animation: whiteScreenReverse 1s forwards; /* Shrink the white screen */
+}
+
+.lcd-screen::before,
+.lcd-screen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+    );
+    opacity: 0.5;
+    animation: glitch 0.2s infinite;
+    pointer-events: none;
+}
+
+.lcd-screen::after {
+    background: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.05) 1px,
+        rgba(0, 0, 0, 0.05) 1px,
+        rgba(0, 0, 0, 0.05) 2px
+    );
+    opacity: 0.2;
+    animation: glitch-horizontal 0.1s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translateY(-2px);
+    }
+    50% {
+        transform: translateY(2px);
+    }
+    100% {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes glitch-horizontal {
+    0% {
+        transform: translateX(-2px);
+    }
+    50% {
+        transform: translateX(2px);
+    }
+    100% {
+        transform: translateX(-2px);
+    }
+}
+
+@keyframes whiteScreen {
+    0% {
+        width: 0;
+        height: 2px;
+    }
+    50% {
+        width: 80%;
+        height: 2px;
+    }
+    75% {
+        width: 80%;
+        height: 80%;
+    }
+    100% {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@keyframes whiteScreenReverse {
+    0% {
+        width: 100%;
+        height: 100%;
+    }
+    50% {
+        width: 80%;
+        height: 80%;
+    }
+    75% {
+        width: 80%;
+        height: 2px;
+    }
+    100% {
+        width: 0;
+        height: 2px;
+    }
+}
+
+
+
+
+
+        .speaker {
+            width: 35px;
+            height: 160px;
+            background-color: #d0cdcd; /* White speaker body */
+            border-radius: 5px; /* Slightly rounded corners */
+            border: 3px solid #000; /* Black outline */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .speaker.left {
+            margin-right: 10px; /* Space between left speaker and screen */
+        }
+
+        .speaker.right {
+            margin-left: 10px; /* Space between right speaker and screen */
+        }
+
+        .speaker-circle {
+            width: 30px;
+            height: 30px;
+            background-color: #000; /* Black speaker circles */
+            border-radius: 50%; /* Circular shape */
+        }
+        
+
+        .speaker-circle.small {
+            width: 15px;
+            height: 15px; /* Smaller circle for variety */
+        }
+
+        .table {
+    position: absolute;
+    top: 355px;
+    left: 80px;
+    width: 150px; /* Width of the table top */
+    height: 10px; /* Height of the table top */
+    background-color: #8b4513; /* Brown color for the table */
+    border-radius: 9px; /* Slightly rounded corners */
+    margin: 0 auto; /* Center the table horizontally */
+    border: 3px solid #000;
+}
+
+.table-leg {
+    position: absolute;
+    width: 7px; /* Width of the legs */
+    height: 80px; /* Height of the legs */
+    background-color: #8b4513; /* Same brown color as the table */
+    border-radius: 2px; /* Rounded corners for legs */
+    border: 3px solid #000;
+}
+
+.table-leg.left {
+    left: 0; /* Position the left leg at the left edge of the table */
+    top: 10px; /* Position below the table top */
+}
+
+.table-leg.right {
+    width: 50px;
+    right: 0; /* Position the right leg at the right edge of the table */
+    top: 10px; /* Position below the table top */
+}
+
+.drawertop{
+    position: absolute;
+    background-color: #bf6409;
+    width: 35px;
+    height: 25px;
+    left: 5px; /* Position the right leg at the right edge of the table */
+    top: 5px; /* Position below the table top */
+    border: 3px solid #000;
+}
+
+.drawer-handle {
+    position: absolute;
+            width: 5px;
+            left: 14px;
+            top: 5px;
+            height: 5px;
+            background-color: #000; /* Black speaker circles */
+            border-radius: 50%; /* Circular shape */
+        }
+
+.drawerbottom{
+    position: absolute;
+    background-color: #bf6409;
+    width: 35px;
+    height: 25px;
+    left: 5px; /* Position the right leg at the right edge of the table */
+    top: 44px; /* Position below the table top */
+    border: 3px solid #000;
+}
+
+
+
+
+.monitor {
+            position: absolute;
+            top: 265px;
+            left: 80px;
+            width: 150px;
+            height: 70px;
+            background-color: #c0c0c0; /* Black monitor screen */
+            border-radius: 10px; /* Rounded corners */
+            border: 3px solid #000000; /* White monitor frame */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            
+        }
+        .monitor-screen {
+    position: absolute;
+    top: 4px;
+    left: 7px;
+    width: 130px;
+    height: 55px;
+    background-color: #2e2e2e; /* Initial dark gray background */
+    border: 3px solid black; /* Black monitor screen border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 1s, opacity 1s; /* Gradual transition of background-color and opacity */
+    display: flex;
+    flex-direction: column;
+
+}
+    .monitortext-container {
+        display: none; /* Initially hidden */
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .monitortext-item {
+        color: white; /* Text color */
+        font-size: 12px; /* Font size */
+        margin: 5px 0; /* Spacing between text items */
+    }
+.monitor-screen.active {
+    background-color: rgba(30, 144, 255, 0.8); /* Blue color with increased opacity */
+    opacity: 1; /* Full opacity when active */
+}
+
+.monitor-screen.active .monitortext-container {
+    display: block; /* Show the text container when active */
+}
+
+
+
+        .webcam {
+            position: absolute;
+            top: -10px; /* Position above the monitor */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 10px;
+            background-color: #fff; /* White webcam body */
+            border-radius: 5px; /* Rounded corners for webcam */
+            border: 2px solid #000; /* Black outline for webcam */
+        }
+
+        .webcam-lens {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 5px;
+            height: 5px;
+            background-color: #000; /* Black lens */
+            border-radius: 50%; /* Circular lens */
+        }
+
+        .stand {
+            position: absolute;
+            bottom: -19px; /* Position below the monitor */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 10px;
+            background-color: #c0c0c0; /* White stand base */
+            border-radius: 5px; /* Rounded corners for stand base */
+            border: 3px solid #000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .window {
+            position: absolute;
+            top: 40px; /* Position inside the frame */
+            left: 450px;
+            width: 250px; /* Width of the window frame */
+            height: 150px; /* Height of the window frame */
+            background-color: #fff; /* White frame */
+            border-radius: 5px; /* Slightly rounded corners for the frame */
+            border: 3px solid #000; /* Black outline for the frame */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .sun {
+    position: absolute;
+    top: 15%; /* Adjust position on the screen */
+    left: 60%; /* Adjust position on the screen */
+    width: 50px; /* Size of the sun */
+    height: 50px; /* Size of the sun */
+    background-color: rgb(255, 255, 0); /* Sun's color */
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 0 50px 20px rgba(255, 255, 0, 0.8); /* Glow effect */
+}
+
+
+
+
+        .sky {
+    position: absolute;
+    top: 8px; /* Position inside the frame */
+    left: 7px;
+    width: calc(100% - 20px); /* Adjust width to fit inside the frame */
+    height: calc(100% - 20px); /* Adjust height to fit inside the frame */
+    /* background-color: #BE75BE; */
+    background-color: #87ceeb; 
+    border-radius: 3px;
+    border: 3px solid #000; /* Rounded corners for the sky rectangle */
+    overflow: hidden; /* Ensures raindrops stay within the sky */
+}
+
+.raindrop {
+    position: absolute;
+    width: 1px; /* Slim raindrop */
+    height: 20px; /* Lengthened for realism */
+    background-color: white; /* Color of the raindrop */
+    opacity: 0.8; /* Slight transparency for natural effect */
+    transform: rotate(15deg); /* Angle for slanted rain */
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100vh) rotate(15deg); /* Start above the screen */
+    }
+    100% {
+        transform: translateY(100vh) rotate(15deg); /* End below the screen */
+    }
+}
+
+
+
+
+        .tabletop {
+            position: absolute;
+            bottom: 100px; /* Adjust based on placement in the room */
+            left: 900px;
+            transform: translateX(-50%);
+            width: 270px; /* Width of the tabletop */
+            height: 70px; /* Height of the tabletop */
+            background-color: #d19b7d; /* Main tabletop color (light brown) */
+            border: 3px solid #000000; /* Dark brown border */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add depth with shadow */
+        }
+
+        /* Tabletop inner detail (the rectangle inside) */
+        .tabletop-detail {
+            position: absolute;
+            top: 10%;
+            left: 2%;
+            width: 94%; /* Inner rectangle width */
+            height: 74%; /* Inner rectangle height */
+            background-color: #c0846b; /* Slightly darker brown for detail */
+            border: 3px solid #000000; /* Dark brown border */
+        }
+
+        /* Handle (optional) */
+        .tabletop-handle {
+            position: absolute;
+            top: 30%;
+            left: 46%;
+            width: 30px; /* Handle width */
+            height: 5px; /* Handle height */
+            border: 2px solid #000000; /* Dark brown border */
+            background-color: #5a3c2a; /* Dark brown handle color */
+        }
+
+
+        .picture-frame {
+            position: absolute;
+            border: 3px solid black; /* Outer frame border */
+            background-color: white; /* Frame background */
+            padding: 6px; /* Space between the outer frame and inner rectangle */
+        }
+
+        /* Inner rectangle (sky blue) */
+        .picture-frame .inner {
+            width: 100%;
+            height: 100%;
+            border: 1px solid black; 
+            background-color: skyblue; /* Sky blue color for the inner part */
+        }
+
+        /* Frame positions */
+        .frame1 {
+            top: 50px;
+            left: 50px;
+            width: 70px;
+            height: 115px;
+        }
+
+        .frame2 {
+            top: 50px;
+            left: 150px;
+            width: 50px;
+            height: 45px;
+        }
+
+        .frame3 {
+            top: 120px;
+            left: 150px;
+            width: 50px;
+            height: 45px;
+        }
+
+
+
+
+        /* Clock container */
+        .clock {
+            position: absolute;
+            top: 50px; /* Position in the room */
+            left: 1163px;
+            transform: translateX(-50%);
+            width: 80px; /* Clock diameter */
+            height: 80px; /* Clock diameter */
+            background-color: #fdfdf5; /* Clock face color */
+            border: 3px solid #090909; /* Clock frame color (brown) */
+            border-radius: 50%; /* Make it circular */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Add depth */
+        }
+
+        /* Hour hand */
+        .hour-hand {
+            position: absolute;
+            top: 10px;
+
+            width: 3px;
+            height: 27px;
+            background-color: black;
+            transform-origin: bottom center;
+            transform: rotate(90deg); /* Default position (3 o'clock) */
+        }
+
+        /* Minute hand */
+        .minute-hand {
+            position: absolute;
+            width: 2px;
+            top: 3px;
+            height: 37px;
+            background-color: rgb(255, 0, 0);
+            transform-origin: bottom center;
+            transform: rotate(180deg); /* Default position (6 o'clock) */
+        }
+
+        /* Center dot */
+        .center-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #000000; /* Match the frame color */
+            border-radius: 50%;
+        }
+
+        
+
+        .fireplace {
+            position: absolute;
+            top: 250px;
+            left: 500px; /* Position from the top */
+            width: 170px; /* Width of the fireplace */
+            height: 150px; /* Height of the fireplace */
+            background-color: #c69c6d; /* Light brown for the fireplace body */
+            border: 3px solid #000000; /* Dark brown border */
+            margin: 50px auto;
+        }
+
+        /* Top mantle */
+        .mantle-top {
+            position: absolute;
+            top: -5px;
+            left: -13px;
+            width: 110%;
+            border-radius: 7px;
+            border: 3px solid #000000;
+            
+            height: 12px; /* Thickness of the top mantle */
+            background-color: #A1662F ; /* Dark brown color */
+        }
+
+        /* Bottom mantle */
+        .mantle-bottom {
+            position: absolute;
+            bottom: -4px;
+            left: -13px;
+            width: 110%;
+            border-radius: 7px;
+            border: 3px solid #000000;
+            height: 23px; /* Thickness of the bottom mantle */
+            background-color: #A1662F; /* Dark brown color */
+        }
+
+        /* Inner rectangle (fireplace opening) */
+        .inner-opening {
+            position: absolute;
+            top: 37px; /* Position from the top */
+            left: 22px; /* Position from the left */
+            width: 120px; /* Width of the opening */
+            height: 90px; /* Height of the opening */
+            background-color: #f5d28a; /* Light yellowish color for inside wall */
+            border: 3px solid #1e1e1e; /* Dark brown border for the inner opening */
+        }
+
+
+
+
+        .fire {
+            position: absolute;
+            top: 395px;
+            left: 588px;
+            transform: translate(-50%, -25%);
+            height: 4vw;
+            width: 4vw;
+        }
+
+        .flames {
+            position: absolute;
+            bottom: 40%;
+            left: 50%;
+            width: 60%;
+            height: 60%;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .flame {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            background-color: #FFDC01;
+            border-radius: 1vw;
+            animation-duration: 1.5s;
+            animation-timing-function: ease-in;
+            animation-iteration-count: infinite;
+            box-shadow: 0 0 20px 10px rgba(255, 220, 1, 0.5);
+            
+        }
+
+        .flame:nth-child(2n+1) {
+            animation-name: flameodd;
+        }
+
+        .flame:nth-child(2n) {
+            animation-name: flameeven;
+        }
+
+        .flame:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .flame:nth-child(2) {
+            animation-delay: 0.375s;
+        }
+
+        .flame:nth-child(3) {
+            animation-delay: 0.75s;
+        }
+
+        .flame:nth-child(4) {
+            animation-delay: 1.125s;
+        }
+
+        .logs {
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 15%;
+        }
+
+        .logs::before, .logs::after {
+            position: absolute;
+            content: '';
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(10deg);
+            height: 100%;
+            width: 100%;
+            border-radius: 1vw;
+        }
+
+        .logs::before {
+            transform: translate(-50%, -50%) rotate(-10deg);
+            background-color: #70392F;
+        }
+
+        .logs::after {
+            background-color: #612E25;
+        }
+
+        @keyframes flameodd {
+            0%, 100% {
+                width: 0;
+                height: 0;
+            }
+            25% {
+                width: 100%;
+                height: 100%;
+            }
+            0% {
+                background-color: #FFDC01;
+                z-index: 1000000;
+                right: 0;
+                bottom: 0;
+            }
+            40% {
+                background-color: #FDAC01;
+            }
+            100% {
+                background-color: #F73B01;
+                z-index: -10;
+                right: 150%;
+                bottom: 170%;
+            }
+        }
+
+        @keyframes flameeven {
+            0%, 100% {
+                width: 0;
+                height: 0;
+            }
+            25% {
+                width: 100%;
+                height: 100%;
+            }
+            0% {
+                background-color: #FFDC01;
+                z-index: 1000000;
+                right: 0;
+                bottom: 0;
+            }
+            40% {
+                background-color: #FDAC01;
+            }
+            100% {
+                background-color: #F73B01;
+                z-index: -10;
+                right: 170%;
+                bottom: 150%;
+            }
+        }
+
+
+
+        .calendar {
+            width: 60px; /* Width of the calendar */
+            height: 70px; /* Height of the calendar */
+            background-color: rgb(255, 255, 255); /* Background for the calendar body */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+            position: absolute;
+            top: -20px; /* Position from the top */
+            left: 800px; /* Position from the left */
+            margin: 50px auto; /* Center alignment */
+            border: 3px solid black; 
+        }
+
+        /* Red header */
+        .calendar-header {
+            width: 100%;
+            height: 20px;
+            background-color: rgb(251, 134, 134);
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+        }
+
+        /* Rings at the top */
+
+
+        /* Date grid container */
+        .date-grid {
+            position: absolute;
+            top: 5px;
+            left: -14px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Four columns for dates */
+            gap: 7px; /* Spacing between squares */
+            padding: 20px;
+        }
+
+        /* Date squares */
+        .date {
+            width: 7px;
+            height: 7px;
+            background-color: rgb(78, 78, 78); /* Black squares for dates */
+            border-radius: 2px; /* Slightly rounded corners */
+        }
+
+
+
+
+        .lamp {
+    
+  height: 50px;
+  width: 50px;
+  border: 3px solid #000000;
+  border-top-width: 3px;
+  transform: perspective(100px) rotateX(40deg);
+  top: 240px;
+  left: 390px;
+  background-color: #fff;
+  box-shadow: inset -10px 0 0 0 #dededf, inset -20px 0 0 0 #e6e7e7, inset -30px 0 0 0 #f5f6f7;
+  position: absolute;
+}
+
+.lampLeg {
+  height: 12px;
+  width: 50px;
+  border: 3px solid #000000;
+  background-color: #616a9a;
+  top: 433px;
+  left: 390px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-shadow: inset -10px 0 0 0 #535e80, inset -20px 0 0 0 #5b648d;
+  position: absolute;
+}
+
+.lampLeg:before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 140px;
+  border: 2px solid #000000;
+  background-color: #485566;
+  top: -143px;
+  left: 23px;
+}
+
+.lampLeg:after {
+  content: '';
+  position: absolute;
+  background-color: #485566;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: -192px;
+  left: 20px;
+  z-index: -10;
+}
+
+
+
+
+.wood {
+            position: absolute;
+            top: 40px; /* Position inside the frame */
+            left: 950px;
+            width: 80px; /* Width of the window frame */
+            height: 100px; /* Height of the window frame */
+            background-color: #563232 ; /* White frame */
+            border-radius: 1px; /* Slightly rounded corners for the frame */
+            border: 3px solid #000; /* Black outline for the frame */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .board {
+            position: absolute;
+            
+            top: 8px; /* Position inside the frame */
+            left: 7px;
+            width: calc(100% - 20px); /* Adjust width to fit inside the frame */
+            height: calc(100% - 20px); /* Adjust height to fit inside the frame */
+            background-color: #094D1C ; /* Light blue for sky */
+            border-radius: 3px;
+            border: 3px solid #000; /* Rounded corners for the sky rectangle */
+        }
+
+
+
+
+
+        .plant-pot {
+            position: absolute;
+            top: 172px;
+            left: 255px;
+            width: 40px;
+            height: 20px;
+            background-color: #8b4513; /* Brown pot */
+            border-radius: 0 0 20px 20px;
+            border: 3px solid #000 ;
+        }
+
+        .plant-pot::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -8px;
+            width: 50px;
+            height: 7px;
+            background-color: #a0522d; /* Lighter brown rim */
+            border-radius: 10px;
+            border: 3px solid #000 ;
+        }
+
+        .stem {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            width: 5px;
+            height: 30px;
+            background-color: #228b22; /* Green stem */
+            transform: translateX(-50%);
+            /* border: 1px solid #000 ; */
+            
+            
+        }
+
+        .leaf {
+            position: absolute;
+            width: 12px;
+            height: 4px;
+            background-color: #228b22; /* Green leaf */
+            border-radius: 50% 50% 0 0;
+            transform-origin: bottom center;
+            /* border: 1px solid #000 ; */
+            
+        }
+
+        .leaf.left {
+            bottom: 8px;
+            left: -10px;
+            transform: rotate(-30deg);
+  
+        }
+
+        .leaf.right {
+            bottom: 8px;
+            right: -10px;
+            transform: rotate(30deg);
+        }
+
+        .flower {
+            position: absolute;
+            bottom: 43px;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            transform: translateX(-50%);
+        }
+
+        .petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #ff69b4; /* Pink petals */
+            border-radius: 50%;
+            /* border: 1px solid #000 ; */
+        }
+
+        .petal:nth-child(1) {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .petal:nth-child(2) {
+            
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .petal:nth-child(3) {
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .petal:nth-child(4) {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .flower-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: #ffff00; /* Yellow center */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            /* border: 1px solid #000 ; */
+        }
+
+
+        .cpu {
+            position: absolute;
+            top: 325px; /* Position from the top */
+            left: -525px; /* Position from the left */
+            width: 45px; /* Width of the CPU */
+            height: 70px; /* Height of the CPU */
+            background-color: grey; /* Grey color for the CPU body */
+            border-radius: 2px; /* Rounded corners */
+            border: 3px solid black; /* Black outline */
+            position: relative;
+            margin: 50px auto; /* Center alignment */
+        }
+
+        /* Slots on the CPU */
+        .slot {
+            width: 70%;
+            height: 5px;
+            background-color: white; /* White color for slots */
+            border: 3px solid black; /* Black outline for slots */
+            margin: 2px auto; /* Center slots horizontally */
+            border-radius: 3px; /* Slightly rounded corners */
+        }
+
+        /* Button on the CPU */
+        .button {
+            width: 10px;
+            height: 10px;
+            background-color: lightcoral; /* Light red color for button */
+            border-radius: 50%; /* Circular shape */
+            border: 3px solid black; /* Black outline for button */
+            position: absolute;
+            bottom: 10px; /* Position at the bottom of the CPU */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+        }
+
+
+/* Popup style */
+.popup {
+    position: absolute;
+    display: none;
+    background-color: white;
+    border: 3px solid black;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease-out;
+}
+
+.popup p {
+    margin: 0;
+}
+
+
+.remote {
+            position: absolute;
+            top: 200px;
+            left: 700px;
+            width: 30px; /* Handle width */
+            height: 5px; /* Handle height */
+            border: 2px solid #000000; /* Dark brown border */
+            background-color:rgb(2, 2, 2); /* Dark brown handle color */
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="room" style="background: {{ profile.room_background|default:'#a8c7ff' }};">
+        <div class="cpu">
+            <!-- Slots -->
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+    
+            <!-- Button -->
+            <div class="button"></div>
+        </div>
+
+        
+
+            <!-- Display profile information -->
+
+            {% comment %} <p>Favorite Food: {{ profile.favorite_food }}</p>
+            <p>Favorite Music: {{ profile.favorite_music }}</p>
+            <p>Favorite Books: {{ profile.favorite_books }}</p>
+            <p>Birthday: {{ profile.birthday }}</p>
+            <p>Social Links: {{ profile.social_links }}</p> {% endcomment %}
+            
+            {% comment %} {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="Profile Photo">
+            {% endif %} {% endcomment %}
+
+            <!-- Show Edit button only if logged-in user is the profile owner -->
+            {% if request.user == profile.user %}
+                <a style="position: absolute; top:10px; left:10px" href="{% url 'edit_profile' username=profile.user.username %}" class="btn btn-primary">Edit Profile</a>
+            {% endif %}
+
+            <!-- Logout button for authenticated users -->
+            {% if user.is_authenticated %}
+                <a style="position: absolute; top:25px; left:10px" href="{% url 'logout' %}" class="btn btn-danger" style="margin-top: 10px;">Log Out</a>
+            {% endif %}
+
+
+        <div class="floor"></div>
+
+  
+
+
+        <div class="fridge">
+            <div class="handle top"></div>
+            <div class="handle bottom"></div>
+        </div>
+
+
+        <div class="nameboard">
+            <div class="bolt"></div>
+            <div class="inner-box">
+                <span>{{ profile.user.username }}</span>
+            </div>
+        </div>
+
+ 
+
+        <div class="bookrack">
+            <div class="shelf">
+                <div class="book"></div>
+                <div class="book"></div>
+                <div class="book"></div>
+                <div class="book slanted"></div>
+  
+            </div>
+            
+            <div class="shelf">
+                <div class="book"></div>
+                <div class="book"></div>
+                <div class="book"></div>
+            </div>
+
+            <div class="shelf">
+                <div class="basketball" onclick="applyGelatineEffect()">
+                    <div class="line-horizontal"></div>
+                    <div class="line-vertical"></div>
+                    <div class="line-left"></div>
+                    <div class="line-right"></div>
+                </div>
+            </div>
+
+        </div>
+
+        
+        <div class="globe-container">
+            <!-- Stand -->
+            <div class="stand-globe" onmouseover="showPopup(event, 'Country: {{ profile.country }}')" onmouseout="hidePopup()"></div>
+    
+            <!-- Globe -->
+            <div class="globe">
+                <!-- Continents -->
+                <div class="continent continent1"></div>
+                <div class="continent continent2"></div>
+                <div class="continent continent3"></div>
+                <div class="continent continent4"></div>
+                <div class="continent continent5"></div>
+                <div class="continent continent6"></div>
+            </div>
+    
+            <!-- Base -->
+            <div class="base"></div>
+            <div class="base-bottom"></div>
+        </div>
+
+
+
+        <div class="lcd-container">
+            <!-- Left Speaker -->
+            <div class="speaker left">
+                <div class="speaker-circle small"></div>
+                <div class="speaker-circle"></div>
+                <div class="speaker-circle"></div>
+            </div>
+    
+            <!-- LCD Screen -->
+            <div class="lcd-screen">
+                <div class="screen-overlay"> <a class="lcdtext" href="https://www.youtube.com/watch?v=AJ53sPNbnAM" target="_blank">{{ profile.favorite_music }}.mp3</a>
+                <a class="lcdtext" href="https://www.google.com/search?q=squid game 2" target="_blank">Movie.mp4</a>
+    {% if user.profile.post2 %}
+        <a class="lcdtext" href="#" onclick="toggleImage('{{ user.profile.post2.url }}')">Image 1.jpg</a>
+    {% endif %}
+    {% if user.profile.post3 %}
+        <a class="lcdtext" href="#" onclick="toggleImage('{{ user.profile.post3.url }}')">Image 2.jpg</a>
+    {% endif %}
+    <!-- Link to show image --></div>
+   <img id="overlay-image" onclick="hideImage()" 
+    style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; max-width: 100%; height: auto; border: 3px solid black;">
+                
+                
+            </div>
+              
+    
+            <!-- Right Speaker -->
+            <div class="speaker right">
+                <div class="speaker-circle small"></div>
+                <div class="speaker-circle"></div>
+                <div class="speaker-circle"></div>
+            </div>
+
+        </div>
+    
+            
+        <div class="monitor">
+<div class="monitor-screen"> 
+    <div class="monitortext-container">
+        <a href="{{ profile.link1|default:'#' }}" target="_blank" rel="noopener noreferrer">
+            Link1
+        </a>
+    </div>
+    <div class="monitortext-container" style="position:absolute;top:23px;">
+        <a href="{{ profile.link2|default:'#' }}" target="_blank" rel="noopener noreferrer">
+            Link2
+        </a>
+    </div>
+    <div class="monitortext-container" style="position:absolute;left:60px;">
+        <a href="{{ profile.link3|default:'#' }}" target="_blank" rel="noopener noreferrer">
+            Link3
+        </a>
+    </div>
+    <div class="monitortext-container" style="position:absolute;left:60px;top:23px;">
+        <a href="{{ profile.link4|default:'#' }}" target="_blank" rel="noopener noreferrer">
+            Link4
+        </a>
+    </div>
+</div>
+
+            <div class="webcam">
+                <div class="webcam-lens"></div>
+            </div>
+            <div class="stand"></div>
+        </div>
+
+        <div class="table">
+            <div class="table-leg left"> </div>
+            <div class="table-leg right">
+                 <div class="drawertop">
+                        <div class="drawer-handle"></div>
+                 </div> 
+                 <div class="drawerbottom">
+                        <div class="drawer-handle"></div>
+                 </div>
+            </div>
+        </div>
+
+        <div class="window">
+            <div class="sky">
+                <div class="sun"></div>
+
+                <!-- Multiple raindrops for a dense rain effect -->
+                <div class="raindrop" style="left: 5%; animation-duration: 0.8s;"></div>
+                <div class="raindrop" style="left: 10%; animation-duration: 1s;"></div>
+                <div class="raindrop" style="left: 15%; animation-duration: 1.2s;"></div>
+                <div class="raindrop" style="left: 20%; animation-duration: 0.7s;"></div>
+                <div class="raindrop" style="left: 25%; animation-duration: 1.5s;"></div>
+                <div class="raindrop" style="left: 30%; animation-duration: 0.9s;"></div>
+                <div class="raindrop" style="left: 35%; animation-duration: 1.3s;"></div>
+                <div class="raindrop" style="left: 40%; animation-duration: 0.8s;"></div>
+                <div class="raindrop" style="left: 45%; animation-duration: 1.1s;"></div>
+                <div class="raindrop" style="left: 50%; animation-duration: 1.6s;"></div>
+                <div class="raindrop" style="left: 55%; animation-duration: 0.7s;"></div>
+                <div class="raindrop" style="left: 60%; animation-duration: 1.4s;"></div>
+                <div class="raindrop" style="left: 65%; animation-duration: 0.9s;"></div>
+                <div class="raindrop" style="left: 70%; animation-duration: 1.2s;"></div>
+                <div class="raindrop" style="left: 75%; animation-duration: 1s;"></div>
+                <div class="raindrop" style="left: 80%; animation-duration: 1.3s;"></div>
+                <div class="raindrop" style="left: 85%; animation-duration: 0.6s;"></div>
+                <div class="raindrop" style="left: 90%; animation-duration: 1.4s;"></div>
+                <div class="raindrop" style="left: 95%; animation-duration: 0.8s;"></div>
+            </div>
+            
+        </div>
+
+        <div class="wood">
+            <div class="board"></div>
+        </div>
+
+        <div class="tabletop">
+            <div class="tabletop-detail"></div>
+            <div class="tabletop-handle"></div>
+        </div>
+
+        
+
+        <div class="picture-frame frame1">
+            <div class="inner"></div>
+        </div>
+        <div class="picture-frame frame2">
+            <div class="inner">
+                {% if profile.photo %}
+                    <img src="{{ profile.photo.url }}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    <p>No photo available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="picture-frame frame3">
+            {% if profile.post1 %}
+                <div class="inner">
+                    <img src="{{ profile.post1.url }}" alt="Post 1 Image" 
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            {% else %}
+                <div class="inner">
+                    <p>No image uploaded</p>
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div class="clock">
+            <div class="hour-hand" id="hour-hand"></div>
+            <div class="minute-hand" id="minute-hand"></div>
+            <div class="center-dot"></div>
+        </div>
+
+
+        <div class="lamp"></div>
+        <div class="lampLeg"></div>
+
+
+
+        <div class="fireplace">
+            <!-- Top mantle -->
+            <div class="mantle-top"></div>
+    
+            <!-- Inner opening -->
+            <div class="inner-opening"></div>
+    
+            <!-- Bottom mantle -->
+            <div class="mantle-bottom"></div>
+        </div>
+
+
+        <div class="fire">
+            <div class="flames">
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+            </div>
+            <div class="logs"></div>
+        </div>
+
+
+        <div class="remote" onclick="toggleScreen()"></div>
+
+        <div class="plant-pot">
+            <div class="stem">
+                <div class="leaf left"></div>
+                <div class="leaf right"></div>
+            </div>
+            <div class="flower">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="flower-center"></div>
+            </div>
+        </div>
+
+
+
+<div class="popup" id="popup">
+    <p id="popup-text"></p>
+</div>
+        <!-- Calendar -->
+    <div class="calendar" onmouseover="showPopup(event, 'Birthday: {{ profile.birthday }}')" onmouseout="hidePopup()">
+
+        <!-- Red header -->
+        <div class="calendar-header"></div>
+
+
+
+        <!-- Date grid -->
+        <div class="date-grid">
+            <!-- Dates -->
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+            <div class="date"></div>
+        </div>
+    </div>
+    
+ 
+
+
+    </div>
+
+
+    
+
+
+    <script>
+        // JavaScript for real-time clock functionality
+        function updateClock() {
+            const now = new Date();
+            
+            // Get current hours and minutes
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+
+            // Calculate angles for the hands
+            const hourAngle = (hours % 12) * 30 + (minutes / 60) * 30; // Each hour is 30 degrees
+            const minuteAngle = minutes * 6; // Each minute is 6 degrees
+
+            // Rotate the hands
+            document.getElementById("hour-hand").style.transform = `rotate(${hourAngle}deg)`;
+            document.getElementById("minute-hand").style.transform = `rotate(${minuteAngle}deg)`;
+        }
+
+        // Update clock every second
+        setInterval(updateClock, 1000);
+
+        // Initialize clock on page load
+        updateClock();
+
+
+
+        function applyGelatineEffect() {
+            const basketball = document.querySelector('.basketball');
+            
+            // Add the gelatine class to trigger the animation
+            basketball.classList.add('gelatine');
+            
+            // Remove the gelatine class after the animation ends
+            basketball.addEventListener('animationend', () => {
+                basketball.classList.remove('gelatine');
+            });
+        }
+let screen = document.querySelector('.lcd-screen');
+let overlay = screen.querySelector('.screen-overlay');
+let lcdtexts = document.querySelectorAll('.lcdtext');
+
+let isClickable = true; // Flag to check if the screen can be clicked
+
+function toggleScreen() {
+    // Check if the screen is clickable (not blocked by the timeout)
+    if (!isClickable) return;  // If not clickable, do nothing
+
+    // Disable the click temporarily
+    isClickable = false;
+
+    // Check if the screen is currently active (white screen visible)
+    if (screen.classList.contains('active')) {
+        // If active, change to inactive to trigger the shrinking effect
+        screen.classList.remove('active');
+        screen.classList.add('inactive');
+        
+        // Hide all links when the screen is shrinking
+        lcdtexts.forEach(link => {
+            link.style.opacity = 0;
+            link.style.visibility = 'hidden';
+        });
+    } else {
+        // If inactive, change to active to trigger the growing effect
+        screen.classList.remove('inactive');
+        screen.classList.add('active');
+
+        // Delay the text appearance by 2 seconds after starting the animation
+        setTimeout(() => {
+            // Show all links after 2 seconds
+            lcdtexts.forEach(link => {
+                link.style.opacity = 1;  // Fade in the links
+                link.style.visibility = 'visible';  // Make the links visible
+            });
+        }, 2000);  // 2000ms delay for the text to appear after 2 seconds
+    }
+
+    // Re-enable the click after 2 seconds
+    setTimeout(() => {
+        isClickable = true; // Allow clicking again after 2 seconds
+    }, 2000);  // 2000ms delay to re-enable click
+}
+
+
+
+   let monitorScreen = document.querySelector('.monitor-screen');
+   let cpu = document.querySelector('.cpu');
+
+    cpu.addEventListener('click', function () {
+
+
+        // Toggle the active class to change color
+        monitorScreen.classList.toggle('active');
+
+            // Add new text if active
+    if (monitorScreen.classList.contains('active')) {
+        let newText = document.createElement('div');
+        newText.classList.add('text-item');
+        monitortextContainer.appendChild(newText);
+    }
+
+    });
+
+
+
+
+let popup = document.getElementById('popup');
+let popupText = document.getElementById('popup-text');
+
+function showPopup(event, text) {
+    // Set the text for the popup
+    popupText.textContent = text;
+
+    // Position the popup near the hovered element
+    const elementRect = event.target.getBoundingClientRect();
+    const popupX = elementRect.left + elementRect.width / 2;
+    const popupY = elementRect.top - 10;
+
+    // Set the position of the popup and display it
+    popup.style.left = `${popupX}px`;
+    popup.style.top = `${popupY}px`;
+    popup.style.display = 'block';
+    popup.style.opacity = 1;
+}
+
+function hidePopup() {
+    // Fade out the popup
+    popup.style.opacity = 0;
+
+    // After the fade-out animation completes (0.5s), hide the popup
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 500); // Match the duration of the opacity transition
+}
+
+
+
+
+function toggleImage(imageUrl) {
+    var image = document.getElementById("overlay-image");
+
+    // Check if the image is already displayed
+    if (image.style.display === "none" || image.src !== imageUrl) {
+        image.src = imageUrl; // Update the image source
+        image.style.display = "block";  // Show the image
+    } else {
+        image.style.display = "none";  // Hide the image
+    }
+}
+
+function hideImage() {
+    var image = document.getElementById("overlay-image");
+    image.style.display = "none"; // Hide the image when it's clicked
+}
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

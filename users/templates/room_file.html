@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2D Room</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #b069db; /* Background outside the room */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .room {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+     /* Ceiling */
+     .ceiling {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 20%;
+      background-color: #3c0061; /* Purple color */
+      clip-path: polygon(20% 100%, 80% 100%, 100% 0, 0% 0); /* Adjusted for narrower walls */
+    }
+/* Hollow Trapezium Outline */
+
+
+
+    /* Floor */
+    .floor {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20%;
+      background-color: #8b4513; /* Brown for floor */
+      clip-path: polygon(20% 0, 80% 0, 100% 100%, 0% 100%); /* Adjusted for narrower walls */
+    }
+
+    /* Back Wall */
+
+    /* Left Wall */
+    .left-wall {
+      position: absolute;
+      top: 20%;
+      left: 0;
+      width: 10%;
+      height: 60%;
+      background-color: #b069db; /* Dark purple for depth */
+    }
+
+    /* Right Wall */
+    .right-wall {
+      position: absolute;
+      top: 20%;
+      right: 0;
+      width: 10%;
+      height: 60%;
+      background-color: #b069db; /* Dark purple for depth */
+    }
+
+    /* Back Wall */
+    .back-wall {
+      position: absolute;
+      top: 20%;
+      left: 20%; /* Adjusted to match the new ceiling/floor */
+      width: 60%; /* Reduced width to match narrower walls */
+      height: 60%;
+      background-color: #6e00b3; /* Slightly lighter purple for the back wall */
+
+    }
+
+     /* Window */
+     .window {
+      position: absolute;
+      top: calc(50% - 10%); /* Center vertically on the back wall */
+      left: calc(50% - 15%); /* Center horizontally on the back wall */
+      width: 30%; /* Window width relative to the room */
+      height: 30%; /* Window height relative to the room */
+      background-color: #87ceeb; /* Light blue for glass effect */
+      border: solid #4c4c4c; /* Dark gray frame color */
+      border-width: 5px; /* Frame thickness */
+    }
+
+    /* Window Dividers (Panes) */
+    .window::before,
+    .window::after {
+      content: '';
+      position: absolute;
+      background-color: #4c4c4c; /* Same as frame color */
+    }
+
+    .window::before {
+      width: 5px; /* Vertical divider width */
+      height: 100%; /* Full height of the window */
+      left: 50%; /* Centered vertically */
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    .window::after {
+      width: 100%; /* Horizontal divider width */
+      height: 5px; /* Horizontal divider thickness */
+      top: 50%; /* Centered horizontally */
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+     /* TV on Left Side */
+  .tv {
+    position: absolute;
+    top: 40%; /* Position vertically */
+    left: 25%; /* Position slightly to the right of the left wall */
+    width: 15%; /* Width of the TV relative to room size */
+    height: 15%; /* Height of the TV relative to room size */
+    background-color: #000; /* Black screen for TV */
+    border: solid #4c4c4c; /* Gray frame for TV border */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Optional shadow for depth */
+  }
+
+  .tv::before {
+    content: '';
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    width: 20%;
+    height: 5%;
+    background-color: #4c4c4c; /* Stand color */
+    transform: translateX(-50%);
+    border-radius: 2px;
+  }
+
+  /* Bookrack on Right Side */
+ /* Vertically Placed Bookrack */
+ .bookrack {
+    position: absolute;
+    top: 35%; /* Adjusted vertical position */
+    right: 25%; /* Positioned to the right of the middle wall */
+    width: 10%; /* Narrower width for a vertical rectangle */
+    height: 40%; /* Taller height for vertical placement */
+    background-color: #8b4513; /* Brown color for wood effect */
+    border: solid #4c4c4c; /* Darker border for definition */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 5px;
+  }
+
+  .bookrack .shelf {
+    width: 100%;
+    height: 15%; /* Adjusted shelf height for vertical orientation */
+    background-color: #d2691e; /* Lighter brown for shelves */
+    border-bottom: solid #4c4c4c; /* Shelf divider line */
+  }
+/* Fridge */
+/* Fridge Body (Top View) */
+/* Fridge Container */
+.fridge {
+  position: absolute;
+  top: 35%; /* Align vertically */
+  right: 10%; /* Position to the right */
+  width: 10%; /* Width of the fridge */
+  height: 40%; /* Height of the fridge */
+}
+
+/* Fridge Top (Trapezoidal Surface) */
+.fridge-top {
+  position: absolute;
+  top: -5%; /* Slightly above the body */
+  left: 0;
+  width: 100%;
+  height: 10%;
+  background-color: #b0b0b0; /* Light gray for the top surface */
+  clip-path: polygon(10% 100%, 90% 100%, 100% 0, 0% 0); /* Trapezoidal shape for perspective */
+}
+
+/* Fridge Body */
+.fridge-body {
+  position: absolute;
+  top: 5%;
+  left: 0;
+  width: 100%;
+  height: 95%;
+  background-color: #d3d3d3; /* Light gray for the fridge body */
+  border-radius: 5px; /* Rounded corners for realism */
+}
+
+/* Top Door */
+.fridge-door-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%; /* Top half of the fridge */
+  background-color: #e0e0e0; /* Slightly lighter gray for contrast */
+}
+
+/* Bottom Door */
+.fridge-door-bottom {
+  position: absolute;
+  bottom: -2px; /* Slightly overlapping with the bottom edge */
+  left: 0;
+  width: calc(100% - -2px);
+}
+
+/* Display Screen on Top Door */
+
+
+
+
+  /* Table */
+  .table {
+    position: absolute;
+    top: 50%; /* Position vertically */
+    left: 20%; /* Position to the left of the TV */
+    width: 12%; /* Width of the table */
+    height: 8%; /* Height of the table */
+    background-color: #8b4513; /* Brown color for wooden table */
+    border: solid #4c4c4c; /* Dark gray border for definition */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Optional shadow for depth */
+  }
+
+  /* Radio */
+  .radio {
+    position: absolute;
+    top: calc(50% - 5%); /* Place on top of the table */
+    left: calc(20% + 2%); /* Centered horizontally on the table */
+    width: 8%; /* Width of the radio */
+    height: 5%; /* Height of the radio */
+    background-color: #000; /* Black body for the radio */
+    border: solid #4c4c4c; /* Dark gray border for definition */
+    border-radius: 5px; /* Rounded edges for radio body */
+  }
+
+  .radio::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    height: 10%;
+    background-color: #d3d3d3; /* Light gray for speaker area */
+    border-radius: 2px;
+  }
+
+  .radio::after {
+    content: '';
+    position: absolute;
+    bottom: 15%;
+    left: calc(50% - 2%);
+    width: 4%;
+    height: 20%;
+    background-color: #ff0000; /* Red button for radio knob */
+    border-radius: 50%;
+  }
+
+
+  /* Calendar Container */
+.calendar {
+  position: absolute;
+  top: 25%; /* Position above the fridge */
+  right: 10%; /* Align with the fridge */
+  width: 80px; /* Width of the calendar */
+  background-color: #f4f4f4; /* Light gray background for the calendar */
+  border-radius: 5px;
+  border: 2px solid #aaa; /* Border for definition */
+  padding: 10px;
+  text-align: center;
+}
+
+/* Current Month and Day */
+.calendar-header {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Calendar Grid (9 Boxes) */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Create a grid with 3 columns */
+  gap: 5px; /* Space between boxes */
+}
+
+.calendar-box {
+  width: 20px; /* Size of each box */
+  height: 20px;
+  background-color: #fff; /* White background for boxes */
+  border-radius: 3px; 
+  border: 1px solid #aaa; 
+}
+
+
+ 
+
+</style>
+
+</head>
+<body>
+  <div class="room">
+
+      
+    <!-- Ceiling -->
+    <div class="ceiling"></div>
+<!-- Hollow Trapezium (Black Outline) -->
+
+
+    <!-- Floor -->
+    <div class="floor"></div>
+
+    <!-- Left Wall -->
+    <div class="left-wall"></div>
+
+    <!-- Right Wall -->
+    <div class="right-wall"></div>
+
+    <!-- Back Wall -->
+    <div class="back-wall">
+        <div class="window"></div>
+        <div class="tv"></div>
+
+        <!-- Bookrack -->
+        <div class="bookrack">
+          <div class="shelf"></div>
+          <div class="shelf"></div>
+          <div class="shelf"></div>
+        </div>
+            <!-- Fridge -->
+            <div class="fridge">
+                <div class="fridge-top"></div>
+                <div class="fridge-body">
+                  <div class="fridge-door-top">
+                    <div class="fridge-screen"></div>
+                    <div class="fridge-handle-top"></div>
+                  </div>
+                  <div class="fridge-door-bottom">
+                    <div class="fridge-handle-bottom"></div>
+                  </div>
+                </div>
+              </div>
+              
+          <!-- Table -->
+        <div class="table"></div>
+
+        <!-- Radio -->
+        <div class="radio"></div>
+        <!-- Calendar -->
+        <!-- <div class="calendar"> -->
+            <!-- Current Month and Day -->
+            <!-- <div class="calendar-header">
+            December<br>26
+            </div> -->
+        
+            <!-- Calendar Grid -->
+            <!-- <div class="calendar-grid">
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            <div class="calendar-box"></div>
+            </div>
+        </div> -->
+
+
+          
+    </div>
+
+
+
+
+
+
+  </div>
+</body>
+</html>
